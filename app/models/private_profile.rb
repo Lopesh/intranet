@@ -5,6 +5,8 @@ class PrivateProfile
   field :personal_email
   field :passport_number
   field :qualification
+  field :internship_start_date, type: Date
+  field :internship_end_date, type: Date
   field :date_of_joining,  :type => Date
   field :end_of_probation, :type => Date
   field :work_experience
@@ -17,6 +19,7 @@ class PrivateProfile
   embeds_many :contact_persons
   has_many :addresses, autosave: true
 
+  validate :validate_internship_date
   validates :date_of_joining, presence: true, if: :check_status_and_role?, on: :update
   validate :validate_date_of_joining, if: 'date_of_joining_changed?'
   validates :previous_work_experience, :allow_blank => true, numericality: { only_integer: true, greater_than_or_equal_to: 0}
@@ -34,6 +37,15 @@ class PrivateProfile
 
   def validate_date_of_joining
     errors.add(:date_of_joining, 'should not a date from future.') if date_of_joining.try(:future?)
+  end
+  def validate_internship_date
+    errors.add(:internship_end_date, 'should be greater than internship start date.') if check_internship_start_end_date?
+  end
+
+  def check_internship_start_end_date?
+    internship_start_date.present? &&
+    internship_end_date.present? &&
+    internship_start_date > internship_end_date
   end
 
   def check_status_and_role?
