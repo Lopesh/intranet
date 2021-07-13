@@ -3,16 +3,17 @@
   %h2=current_user == @user ? 'My Profile' : "#{user_name}'s Profile"
 - if current_user.can_change_role_and_status?(@user)
   = render partial: "update_status"
+- @tab = 'public_profile' if @tab.blank?
 %div.tabbable
   %ul.nav.nav-tabs
-    %li.active.public-tab
+    %li.public-tab{class: ('active' if @user.valid?)}
       %a{data: {toggle: 'tab'}, href: '#public'}
-        Public Profile
+        Public Profile 123
     %li.private-tab
       %a{data: {toggle: 'tab'}, href: '#private'}
         Personal Details
     - if can? :edit, User
-      %li.emp-details-tab
+      %li.emp-details-tab{:class => ("active" if @user.errors.keys.include?(:next_assessment_month))}
         %a{data: {toggle: 'tab'}, href: '#emp-details'}
           Employee details
     - if DOCUMENT_MANAGEMENT.include?(current_user.role) || current_user == @user

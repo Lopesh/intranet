@@ -38,9 +38,10 @@ class UsersController < ApplicationController
     if return_value_of_add_project && return_value_of_remove_project
       tab = params[:user][:attachments_attributes].present? ? 'Documents': 'Employee details'
       if @user.save
-        flash.notice = "#{tab} updated Successfully"
+        flash.notice = "#{tab} updated Successfully 123444"
         redirect_to public_profile_user_path(@user)
       else
+        load_emails_and_projects
         flash[:error] = "#{tab}: Error #{@user.generate_errors_message}"
         render 'public_profile'
       end
