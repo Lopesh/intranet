@@ -1,5 +1,5 @@
 = simple_form_for(@user, :url => user_path(@user), :html => { method: :put, class: "form-horizontal", multipart: true}) do |f|
-  = f.input :status, as: :select, collection: STATUS.map {|k,v| [k.to_s.titleize, v]}, selected: f.object.try(:status), label: 'Status'
+  = f.input :status, as: :select, collection: STATUS.map {|k,v| [v.to_s.titleize, v]}, selected: f.object.try(:status), label: 'Status'
   = f.simple_fields_for :employee_detail do |e|
     = e.input :reason_of_resignation, wrapper_html: { id: 'reason_of_resignation' }
   = f.input :role, collection: User::ROLES, prompt: 'Select Role', required: false, label: "Change Role"

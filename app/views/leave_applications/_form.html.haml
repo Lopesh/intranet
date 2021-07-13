@@ -1,6 +1,12 @@
 = f.hidden_field :user_id
 .row
   .span4
+    - if current_user.status == STATUS[:notice]
+      .div#notice_text
+        Not applicable for WFH leaves:
+        %br
+        Your Last Working Day will be extended by the number of leave(s) you take within the notice period.
+    %br
     - if @available_leaves == 0
       = f.input :leave_type, collection: LEAVE_TYPES.values, prompt: 'Select Leave Type', selected:LEAVE_TYPES[:unpaid] 
     -else
