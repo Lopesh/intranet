@@ -3,32 +3,31 @@
   %h2=current_user == @user ? 'My Profile' : "#{user_name}'s Profile"
 - if current_user.can_change_role_and_status?(@user)
   = render partial: "update_status"
-- @tab = 'public_profile' if @tab.blank?
 %div.tabbable
   %ul.nav.nav-tabs
-    %li.public-tab{class: ('active' if @user.valid?)}
+    %li.public-tab{class: ('active' if (@current_tab_pane == "public_profile" || @current_tab_pane.blank? ))}
       %a{data: {toggle: 'tab'}, href: '#public'}
-        Public Profile 123
-    %li.private-tab
+        Public Profile
+    %li.private-tab{class: ('active' if (@current_tab_pane == "private_profile"))}
       %a{data: {toggle: 'tab'}, href: '#private'}
         Personal Details
     - if can? :edit, User
-      %li.emp-details-tab{:class => ("active" if @user.errors.keys.include?(:next_assessment_month))}
+      %li.emp-details-tab{class: ('active' if (@current_tab_pane == "employee_detail"))}
         %a{data: {toggle: 'tab'}, href: '#emp-details'}
           Employee details
     - if DOCUMENT_MANAGEMENT.include?(current_user.role) || current_user == @user
       %li.document-tab
-        %a{data: {toggle: 'tab'}, href: '#document'}
+        %a{data: {toggle: 'tab'}, href: '#document', class: ('active' if (@current_tab_pane == "document"))}
           Documents
 
   .tab-content
-    .tab-pane.active#public
+    .tab-pane.active#public{class: ('active' if (@current_tab_pane == "public_profile" || @current_tab_pane.blank? ))}
       = render partial: 'public_profile'
-    .tab-pane#private
+    .tab-pane#private{class: ('active' if (@current_tab_pane == "private_profile"))}
       = render partial: 'private_profile'
-    .tab-pane#emp-details
+    .tab-pane#emp-details{class: ('active' if (@current_tab_pane == "employee_detail"))}
       = render partial: 'employee_detail'
-    .tab-pane#document
+    .tab-pane#document{class: ('active' if (@current_tab_pane == "document"))}
       = render partial: 'document'
 
 :javascript

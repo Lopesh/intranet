@@ -1,4 +1,5 @@
 = simple_form_for(@private_profile, url: private_profile_user_path, :html => { method: :put, class: "form-horizontal private-profile", multipart: true}) do |pri|
+  = hidden_field_tag :tab, "private_profile"
   %h4 Personal Details
   %table{style: "width:100%;"}  
     %tr

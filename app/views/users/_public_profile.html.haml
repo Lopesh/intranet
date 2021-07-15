@@ -38,6 +38,7 @@
   = pub.input :linkedin_url
   = pub.input :facebook_url
   = pub.input :slack_handle
+  = hidden_field_tag :tab, "public_profile"
   %center
     = pub.submit 'Update Profile', class: 'btn'
 :css

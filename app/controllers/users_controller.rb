@@ -35,19 +35,25 @@ class UsersController < ApplicationController
     return_value_of_add_project = return_value_of_remove_project = true
     @user.attributes =  user_params
     return_value_of_add_project, return_value_of_remove_project = @user.add_or_remove_projects(params) if params[:user][:project_ids].present?
+    @current_tab_pane = params[:tab]
+    load_emails_and_projects
     if return_value_of_add_project && return_value_of_remove_project
       tab = params[:user][:attachments_attributes].present? ? 'Documents': 'Employee details'
       if @user.save
-        flash.notice = "#{tab} updated Successfully 123444"
+        puts "\n\n\n\n update-if- before redirect \n\n\n\n\n"
+        flash.notice = "#{tab} updated Successfully"
         redirect_to public_profile_user_path(@user)
+        #render_tab_pane(@current_tab_pane)
+        puts "\n\n\n\n update-if- after redirect \n\n\n\n\n"
       else
-        load_emails_and_projects
         flash[:error] = "#{tab}: Error #{@user.generate_errors_message}"
-        render 'public_profile'
+        render_tab_pane(@current_tab_pane)
+        #render 'public_profile'
       end
     else
       flash[:error] = 'Error unable to add or remove project'
-      redirect_to public_profile_user_path(@user)
+      render_tab_pane(@current_tab_pane)
+      #redirect_to public_profile_user_path(@user)
     end
   end
 
@@ -65,6 +71,8 @@ class UsersController < ApplicationController
 
   def update_profile(profile)
     user_profile = (profile == "private_profile") ? @private_profile : @public_profile
+    @current_tab_pane = params[:tab]
+    load_emails_and_projects
     if request.put?
       #Need to change these permit only permit attributes which should be updated by user
       #In our application there are some attributes like joining date which will be only
@@ -75,13 +83,31 @@ class UsersController < ApplicationController
       if @user.update_attributes(profile => params.require(profile).permit!)
         flash.notice = 'Profile Updated Successfully'
         #UserMailer.delay.verification(@user.id)
+        #render_tab_pane(@current_tab_pane)
         redirect_to public_profile_user_path(@user)
+        #redirect_to :back
       else
         tab = (profile == "private_profile") ? 'Private Profile' : 'Public Profile'
         flash[:error] = "#{tab}: Error #{@user.generate_errors_message}"
-        render "public_profile"
+        #render_tab_pane(@current_tab_pane)
+        #render "public_profile"
       end
     end
+  end
+
+  def render_tab_pane(current_tab_pane)
+    p "\n\n\n\priting inside render_tab_pane"
+    render "public_profile"
+    # case current_tab_pane
+    # when "public_profile"
+    #   render "public_profile"
+    # when "private_profile"
+    #   render partial: "private_profile"
+    # when "employee_detail"
+    #   render partial: "employee_detail"
+    # when "document"
+    #   render partial: "document"
+    # end    
   end
 
   def invite_user

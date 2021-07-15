@@ -12,6 +12,7 @@
   %br
 
 = simple_nested_form_for(@user,:url => user_path(@user), :html => { method: :put, class: "form-horizontal", multipart: true}) do |f|
+  = hidden_field_tag :tab, "document"
   = f.fields_for :attachments do |a|
     = a.input :name, input_html: { 'aria-label': 'Enter the file name' }
     = a.input :document, input_html: { 'aria-label': 'Choose file', role: 'button' }
