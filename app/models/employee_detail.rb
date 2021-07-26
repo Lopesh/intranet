@@ -72,7 +72,8 @@ class EmployeeDetail
     !(
       user.role.in?([ROLE[:intern], ROLE[:admin]]) ||
       user.employee_detail.assessment_platform == "None" ||
-      (user.email =~ /\.jc@joshsoftware\.com$/).present?
+      (user.email =~ /\.jc@joshsoftware\.com$/).present? ||
+      user.status == STATUS[:created]
     )
   end
 end
