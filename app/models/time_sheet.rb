@@ -561,19 +561,22 @@ class TimeSheet
   end
 
   def self.generate_and_send_employees_working_hour_report(dates, duration)
-    reports = []
+    reports = @result = []
     dates.each do |date|
-      result = TimeSheet.get_users_and_total_worked_hours(date, duration)
-      if result.present?
-        users = result.map { |i| i[:_id][:user_id] }
-        users.each do |user|
+      @result += TimeSheet.get_users_and_total_worked_hours(date, duration)
+    end
+    if @result.present?
+      users = @result.map { |i| i[:_id][:user_id] }
+      unique_users = users.uniq
+      unique_users.each do |user|
+        dates.each do |date|
           timesheets = TimeSheet.where(date: date, user_id: user).group_by(&:project_id)
           timesheets.keys.each do |key|
             total_duration = timesheets[key].map(&:duration).sum
             reports << [  timesheets[key].first.date.to_s,
-                          timesheets[key].first.user.name,
-                          timesheets[key].first.project.name,
-                          formatted_duration(total_duration)]
+                        timesheets[key].first.user.name,
+                        timesheets[key].first.project.name,
+                        formatted_duration(total_duration)]
           end
         end
       end
