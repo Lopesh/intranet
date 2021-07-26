@@ -12,7 +12,7 @@ class Api::V1::WebsiteController < ApplicationController
 
   def news
     render json: {
-      news: News.all.order(date: :desc).group_by { |n| n.date.year }.as_json(methods: [:formatted_date])
+      news: News.all.order('date.year': :desc).as_json(methods: [:formatted_date, :formatted_title, :formatted_description])
     }
   end
 
