@@ -20,7 +20,7 @@ class EmployeeDetail
   field :division, type: String
   field :joining_bonus_paid, type: Boolean, default: false
   field :assessment_month, type: Array, default: []
-  field :assessment_platform
+  field :assessment_platform, type: String
 
   belongs_to :designation
 
@@ -33,9 +33,13 @@ class EmployeeDetail
   validates :division, inclusion: { in: DIVISION_TYPES.values, allow_nil: true }
   validates :assessment_platform, inclusion: { in: ASSESSMENT_PLATFORM }, allow_nil: false, on: :update
   validates :assessment_month, presence: true, if: :eligible_for_assessment?
-  validates :assessment_month, length: { is: 2 , message: 'should have two months.'},allow_nil: false, if: :eligible_for_assessment?
+  validates :assessment_month, length: { is: 2 , message: 'should have two months.'}, allow_nil: false, if: :eligible_for_assessment?
   validates :assessment_month, length: { in: 0..2, message:'should have two months.'}, unless: :eligible_for_assessment? 
-  
+
+  after_create do
+    set_employee_assessment_platform if user.status == STATUS[:created]
+  end
+
   before_save do
     self.notification_emails.try(:reject!, &:blank?)
   end
@@ -75,6 +79,13 @@ class EmployeeDetail
       (user.email =~ /\.jc@joshsoftware\.com$/).present? ||
       user.status == STATUS[:created]
     )
+  end
+
+  def set_employee_assessment_platform
+    platform = "None"
+    platform = "PLAI" if user.role.in?([ROLE[:manager], ROLE[:HR], ROLE[:finance]])
+    platform = "Snowflake" if user.role.in?([ROLE[:employee]])
+    user.employee_detail.assessment_platform = platform
   end
 end
 

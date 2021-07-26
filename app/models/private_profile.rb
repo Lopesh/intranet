@@ -29,6 +29,7 @@ class PrivateProfile
       user = self.user
       user.assign_leave('DOJ Updated') if user.eligible_for_leave?
       user.set_details("doj", self.date_of_joining)
+      set_new_employee_assessment_months(user)
     end
   end
 
@@ -38,7 +39,7 @@ class PrivateProfile
 
   def check_status_and_role?
     return true if date_of_joining.blank? &&
-                   [ ROLE[:employee], ROLE[:HR], ROLE[:consultant] ].include?(user.role) &&
+                   ROLE.has_value?(user.role) &&
                    user.status == STATUS[:approved]
 
     return false
@@ -50,5 +51,13 @@ class PrivateProfile
     UserMailer.notify_probation(users, date).deliver_now if users.present?
   end
 
+  def set_new_employee_assessment_months(user)
+    doj = self.date_of_joining
+    doj_month = Date::MONTHNAMES[(doj).month] #doj+12
+    doj_month_plus_six = Date::MONTHNAMES[(doj + 6.month).month] #doj+6
+    emp_assessment_months = [doj_month, doj_month_plus_six]
+    user.employee_detail.update_attributes(assessment_month: emp_assessment_months)
+  end
+  
   #validates_presence_of :qualification, :date_of_joining, :personal_emailid, :on => :update
 end
