@@ -11,8 +11,7 @@
       - status_class = visibility == "Visible" ? 'label-success' : 'label-warning'
       .label{class: status_class}
         = visibility
-%td
-  %h4.text-right
-    -if can? :mannage, Attachment
+  %td
+    %h4.text-right
       = link_to "", edit_attachment_path(doc), class: "icon-edit", data: {"no-turbolink" => true}, remote: true
       = link_to "", attachment_path(doc), data: {method: :delete, confirm: "Are you sure?"}, class: "icon-trash"

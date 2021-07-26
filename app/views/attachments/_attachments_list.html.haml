@@ -1,4 +1,4 @@
-- unless @company_docs.empty?
+- unless @company_docs.blank?
   %table.table.table-hover{ role: 'table', 'aria-label': 'Documents Table' }
     %thead
       %th Document Name
@@ -7,13 +7,8 @@
         %th.pull-right Manage
     %tbody
       - @company_docs.each do |doc|   
-        - if doc.is_visible_to_all or (can? :manage, Attachment && !@show_all)
-          %tr
-            = render partial: 'document_row', locals: {doc: doc}
-        - if @show_all && (can? :manage, Attachment)
-          %tr
-            = render partial: 'document_row', locals: {doc: doc}
-        
+        %tr
+          = render partial: 'document_row', locals: {doc: doc}
 - else
   %h4
     = "No Documents to Download"

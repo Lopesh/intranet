@@ -4,15 +4,24 @@
 $(document).ready ->
   $("#doc_show").click ->
     if $("#doc_show").text() == 'Show All'
-      params = $.param({ all:"all" })
-      $.ajax
-        type: 'GET'
-        dataType: 'script'
-        url:'/attachments' + '?' + params
+      params = 'all_docs=true'
       $("#doc_show").text('Show Visible')
     else
-      $.ajax
-        type: 'GET'
-        dataType: 'script'
-        url:'/attachments'
+      params = 'all_docs=false' 
       $("#doc_show").text('Show All')
+    $.ajax
+      type: 'GET'
+      dataType: 'script'
+      url:'/attachments' + '?' + params
+
+  $("#policy_show").click ->
+    if $("#policy_show").text() == 'Show All'
+      params = 'all_policies=true'
+      $("#policy_show").text('Show Published')
+    else
+      params = 'all_policies=false'
+      $("#policy_show").text('Show All')
+    $.ajax
+      type: 'GET'
+      dataType: 'script'
+      url:'/attachments' + '?' + params

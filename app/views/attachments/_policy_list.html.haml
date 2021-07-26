@@ -1,0 +1,14 @@
+- unless @policies.blank?
+  %table.table.table-hover
+    %thead
+      %th Policy Title
+      - if can? :manage, Policy
+        %th Visibility
+        %th.pull-right Manage
+    %tbody
+      - @policies.each do |policy|
+        %tr
+          = render partial: 'policy_row', locals: {policy: policy}
+- else
+  %h4
+    = 'No policies found'

@@ -1,26 +1,15 @@
-
 %h2
   Policies
 - if can? :manage, Policy
-  .btn_position
-    = link_to "Add Policy", new_policy_path
-  .btn_margin
-    = link_to 'Add Holiday', new_holiday_list_path
+  = link_to "Add Policy", new_policy_path, class: 'btn btn-primary mb-5'
 
-.form-horizontal
-  - unless @policies.empty?
-    %table.table.table-hover
-      %thead
-        %th Policy Title
-        %th.pull-right Manage
-      %tbody
-        - @policies.each do |policy|
-          - if policy.is_published or (can? :manage, Policy)  
-            %tr
-              = render partial: 'policy_row', locals: {policy: policy}
-  - else
-    %h4
-      = 'No policies found'
+  = link_to 'Add Holiday', new_holiday_list_path, class: 'btn btn-primary mb-5'
+  .pull-right
+    %button{ type: 'button', id: 'policy_show', role: 'button',class: 'btn btn-primary mb-5'} Show All
+
+.form-horizontal#policy_list
+  = render partial: 'policy_list', documents: @policies
+
   .holiday_list
     = link_to 'Holiday List', holiday_lists_path
 :css 

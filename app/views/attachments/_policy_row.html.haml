@@ -2,8 +2,14 @@
   %h4
     .remove_underline
       = link_to policy.title, policy_path(policy)
-%td
-  %h4.pull-right
-    -if can? :manage, Policy
+-if can? :manage, Policy
+  %td
+    %h4
+      - visibility = policy.is_published ? "Published" : "Not Published"
+      - status_class = visibility == "Published" ? 'label-success' : 'label-warning'
+      .label{class: status_class}
+        = visibility
+  %td
+    %h4.pull-right
       = link_to "", edit_policy_path(policy), class: "icon-edit", data: {"no-turbolink" => true}
       = link_to "", policy_path(policy), data: {method: :delete, confirm: "Are you sure?"}, class: "icon-trash"

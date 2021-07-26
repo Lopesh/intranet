@@ -5,14 +5,33 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @company_docs = Attachment.company_documents
-    @show_all = params[:all].present?
-    @attachment = Attachment.new
-    @policies = Policy.all
     respond_to do |format|
-      format.html
-      format.js
-      format.json { render json: @company_docs.to_json }
+      @attachment = Attachment.new
+      
+      format.html do
+        @policies = Policy.all.where(is_published: true)
+        @company_docs = Attachment.company_documents.where(is_visible_to_all: true)
+      end
+
+      format.js do
+        if params.has_key?(:all_policies)
+          @policies = if params[:all_policies] == "true"      
+            Policy.all 
+          else
+            Policy.all.where(is_published: true)
+          end
+        end  
+        
+        if params.has_key?(:all_docs)
+          @company_docs =  if params[:all_docs] == "true"
+            Attachment.company_documents
+          else
+            Attachment.company_documents.where(is_visible_to_all: true)
+          end 
+        end
+      end
+
+      format.json { render json: @company_docs.to_json } 
     end
   end
 
