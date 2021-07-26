@@ -19,7 +19,8 @@ class EmployeeDetail
   field :source, type: String
   field :division, type: String
   field :joining_bonus_paid, type: Boolean, default: false
-  field :next_assessment_month, type: Array, default: []
+  field :assessment_month, type: Array, default: []
+  field :assessment_platform
 
   belongs_to :designation
 
@@ -30,10 +31,17 @@ class EmployeeDetail
   after_update :delete_team_cache, if: Proc.new{ updated_at_changed? }
   validates :location, presence: true
   validates :division, inclusion: { in: DIVISION_TYPES.values, allow_nil: true }
-  validates :next_assessment_month, length: { maximum: 2 , message: 'At most 2 months can be added.'}
-   
+  validates :assessment_platform, inclusion: { in: ASSESSMENT_PLATFORM }, allow_nil: false, on: :update
+  validates :assessment_month, presence: true, if: :eligible_for_assessment?
+  validates :assessment_month, length: { is: 2 , message: 'should have two months.'},allow_nil: false, if: :eligible_for_assessment?
+  validates :assessment_month, length: { in: 0..2, message:'should have two months.'}, unless: :eligible_for_assessment? 
+  
   before_save do
     self.notification_emails.try(:reject!, &:blank?)
+  end
+
+  before_validation do
+    self.assessment_month.try(:reject!, &:blank?)
   end
 
   def user_status_changed?
@@ -59,4 +67,14 @@ class EmployeeDetail
     remaining_leaves = available_leaves + number_of_days
     self.update_attribute(:available_leaves, remaining_leaves)
   end
+
+  def eligible_for_assessment?
+    !(
+      user.role.in?([ROLE[:intern], ROLE[:admin]]) ||
+      user.employee_detail.assessment_platform == "None" ||
+      (user.email =~ /\.jc@joshsoftware\.com$/).present? ||
+      user.status == STATUS[:created]
+    )
+  end
 end
+

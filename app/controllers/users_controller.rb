@@ -46,6 +46,7 @@ class UsersController < ApplicationController
         #render_tab_pane(@current_tab_pane)
         puts "\n\n\n\n update-if- after redirect \n\n\n\n\n"
       else
+        load_emails_and_projects
         flash[:error] = "#{tab}: Error #{@user.generate_errors_message}"
         render_tab_pane(@current_tab_pane)
         #render 'public_profile'
@@ -60,7 +61,6 @@ class UsersController < ApplicationController
   def public_profile
     profile = params.has_key?("private_profile") ? "private_profile" : "public_profile"
     update_profile(profile)
-    load_emails_and_projects
     @user.attachments.first || @user.attachments.build
   end
 
@@ -70,6 +70,7 @@ class UsersController < ApplicationController
   end
 
   def update_profile(profile)
+    load_emails_and_projects
     user_profile = (profile == "private_profile") ? @private_profile : @public_profile
     @current_tab_pane = params[:tab]
     load_emails_and_projects
@@ -186,7 +187,8 @@ class UsersController < ApplicationController
       :status, :role, :visible_on_website, :website_sequence_number, :allow_backdated_timesheet_entry,
       employee_detail_attributes: [:id, :employee_id, :location, :date_of_relieving, :source,
       :reason_of_resignation, :designation, :division, :description, :is_billable,
-      :skip_unassigned_project_ts_mail, :designation_track, :joining_bonus_paid, :notification_emails, :next_assessment_month => [] ],
+      :skip_unassigned_project_ts_mail, :designation_track, :joining_bonus_paid,
+      :assessment_platform, :assessment_month => [], :notification_emails => [] ],
       attachments_attributes: [:id, :name, :document, :_destroy]
     )
   end
