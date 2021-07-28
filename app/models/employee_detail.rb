@@ -20,7 +20,7 @@ class EmployeeDetail
   field :division, type: String
   field :joining_bonus_paid, type: Boolean, default: false
   field :assessment_month, type: Array, default: []
-  field :assessment_platform
+  field :assessment_platform, type: String, default: "None" 
 
   belongs_to :designation
 
@@ -33,7 +33,7 @@ class EmployeeDetail
   validates :division, inclusion: { in: DIVISION_TYPES.values, allow_nil: true }
   validates :assessment_platform, inclusion: { in: ASSESSMENT_PLATFORM }, allow_nil: false, on: :update
   validates :assessment_month, presence: true, if: :eligible_for_assessment?
-  validates :assessment_month, length: { is: 2 , message: 'should have two months.'},allow_nil: false, if: :eligible_for_assessment?
+  validates :assessment_month, length: { is: 2 , message: 'should have two months.'}, allow_nil: false, if: :eligible_for_assessment?
   validates :assessment_month, length: { in: 0..2, message:'should have two months.'}, unless: :eligible_for_assessment? 
   
   before_save do
