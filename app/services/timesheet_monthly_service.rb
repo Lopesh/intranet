@@ -32,7 +32,8 @@ class TimesheetMonthlyService
       users = get_users_location_wise(location)
       all_users_id_set = users.pluck(:_id)
       initialize_users_records(users, report, records)
-      report[:resigned_emp_name] = get_resigned_users_name(users)
+      resigned_users = get_resigned_users(users)
+      report[:resigned_emp_name] = resigned_users.collect(&:name)
 
       report[:header].each do |date|
         users_timesheet = TimeSheet.get_users_and_total_worked_hours(date.to_date, 0)
@@ -95,6 +96,8 @@ class TimesheetMonthlyService
           date_manipulations
         )
       end
+
+      resigned_employee(records, resigned_users, holiday) if resigned_users.count > 0
       report[:records] = records
       report[:timesheet_per_day_count] = timesheet_per_day_count
       @reports << report
@@ -142,6 +145,19 @@ class TimesheetMonthlyService
       end
       records[user_id][:'occurances'] += 1
       timesheet_per_day_count[:"#{date_manipulations[:date]}"] += 1
+    end
+  end
+
+  def resigned_employee(records, resigned_users, holiday)
+    resigned_users.each do |user|
+      resigned_date = user.employee_detail.date_of_relieving + 1.day
+      (resigned_date..@to_date).to_a.each do |date|
+        str_date = date.strftime('%d/%m/%Y')
+        if records[user.id][:'timesheet'][:"#{str_date}"].eql?('NF') 
+          records[user.id][:'timesheet'][:"#{str_date}"] = 'RE'
+          records[user.id][:'no_of_ts_missing_days'] -= 1
+        end
+      end
     end
   end
 
@@ -202,14 +218,14 @@ class TimesheetMonthlyService
     end
   end
 
-  def get_resigned_users_name(users)
+  def get_resigned_users(users)
     users.where(
       status: STATUS[:resigned],
       'employee_detail.date_of_relieving': {
         '$gte': @from_date,
         '$lte': @to_date
       }
-    ).collect(&:name)
+    )
   end
 
   def get_users_location_wise(location)

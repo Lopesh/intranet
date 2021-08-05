@@ -30,7 +30,7 @@ reports.each do |report|
 	    end
 
       sheet.add_row(['Employee Id', 'Employee Name', 'Project Name'] + day_abbrivation +
-                    ['Occurrence', '#Weekdays', '#Weekends', '#Holiday',
+                    ['#Aggregate', '#Weekdays', '#Weekends', '#Holiday',
                     '#Leaves days', '#Timesheet missing days'])
 
       report[:records].each do |record|
