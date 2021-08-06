@@ -20,6 +20,10 @@ class Ability
       cannot :manage, LeaveApplication
       can [:new, :create], LeaveApplication, user_id: user.id
       can [:edit, :update], LeaveApplication, leave_status: 'Pending', user_id: user.id
+      can :read, Policy
+      can [:index, :download_document], Attachment do |attachment|
+        attachment.user_id == user_id || attachment.is_visible_to_all
+      end
     elsif user.role? 'Manager'
       employee_abilities(user.id)
       can :manage, Project
