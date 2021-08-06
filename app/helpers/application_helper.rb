@@ -17,7 +17,7 @@ module ApplicationHelper
     role = current_user.role
     case event
     when 'Events' then [ROLE[:consultant]].include?(role)
-    when 'Documents' then [ROLE[:consultant], ROLE[:finance]].include?(role)
+    when 'Documents' then [ROLE[:consultant]].include?(role)
     when 'Newsletter' then [ROLE[:HR], ROLE[:admin], 'Super Admin'].include?(role)
     when 'Contacts' then [ROLE[:admin], 'Super Admin'].include?(role)
     when 'Manage Leave' then [ROLE[:admin], 'Super Admin', ROLE[:HR]].include?(role)
