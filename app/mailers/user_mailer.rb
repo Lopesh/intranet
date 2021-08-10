@@ -73,10 +73,15 @@ class UserMailer < ActionMailer::Base
     mail(to: hr, subject: "Intranet: #{@downloader.name} has downloaded #{document_name}")
   end
 
-  def birthday_wish(user_id)
+  def birthday_wish(user_id, birthday_templete)
     @birthday_user = User.find(user_id)
-    url = @birthday_user.public_profile.image.medium.path || "#{Rails.root}/app/assets/images/default_photo.gif"
-    attachments.inline['user.jpg'] = File.read(url)
+    @current_template = BIRTHDAY_TEMPLATES[:"#{birthday_templete}"]
+    @image = @birthday_user.public_profile.image.medium
+    if @image.present?
+      attachments.inline['user.jpg'] = File.read(@image.path)
+    else
+      attachments.inline['user.jpg'] = File.read("#{Rails.root}/app/assets/images/user_dummy_image.jpg")
+    end
     mail(to: 'all@joshsoftware.com', subject: "Happy Birthday #{@birthday_user.name}")
   end
 

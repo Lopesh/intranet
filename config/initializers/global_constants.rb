@@ -61,3 +61,13 @@ LEAVE_TYPES = {leave: 'LEAVE', wfh: 'WFH', optional_holiday: 'OPTIONAL HOLIDAY',
 
 ASSESSMENT_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 ASSESSMENT_PLATFORM = ['PLAI', 'Snowflake', 'None']
+
+BIRTHDAY_TEMPLATES={template_0: {bg_color: '#62c4c8', bg_image: 'birthday-template-1@2x.png', photo_bg_color: '#4a9396', name_color: '#275355'},
+                    template_1: {bg_color: '#97b58d', bg_image: 'birthday-template-2@2x.png', photo_bg_color: '#a9bca3', name_color: '#400003'},
+                    template_2: {bg_color: '#b18c62', bg_image: 'birthday-template-6@2x.png', photo_bg_color: '#907e6a', name_color: '#ffffff'},
+                    template_3: {bg_color: '#cc6d51', bg_image: 'birthday-template-7@2x.png', photo_bg_color: '#87c6a8', name_color: '#ffffff'},
+                    template_4: {bg_color: '#31999d', bg_image: 'birthday-template-8@2x.png', photo_bg_color: '#00eaea', name_color: '#ffffff'}
+                  }
+#template_2: {bg_color: '#009fb0', bg_image: 'birthday-template-3@2x.png', photo_bg_color: '#65acc0', name_color: '#ffffff'},
+#template_3: {bg_color: '#78689c', bg_image: 'birthday-template-4@2x.png', photo_bg_color: '#655884', name_color: '#ffffff'},
+#template_4: {bg_color: '#4d8a8e', bg_image: 'birthday-template-5@2x.png', photo_bg_color: '#4a9396', name_color: '#ffffff'},
