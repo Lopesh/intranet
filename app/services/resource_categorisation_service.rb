@@ -168,11 +168,11 @@ class ResourceCategorisationService
       @report[:project_wise_resource_report][:records] << add_project_wise_record(user).merge(
         code: user_project.project.code,
         "#{allocation_type}": allocation,
-        shared: shared,
-        bench: bench,
         project: user_project.project.name,
         type_of_project: user_project.project.type_of_project,
-        billing_frequency: user_project.project.billing_frequency
+        billing_frequency: user_project.project.billing_frequency,
+        start_date: user_project.start_date.to_s,
+        no_of_days: (Date.today-user_project.start_date).to_i
       )
     end
   end
@@ -209,8 +209,8 @@ class ResourceCategorisationService
       billable: 0,
       non_billable: 0,
       investment: 0,
-      shared: 0,
-      bench: 0,
+      start_date: '',
+      no_of_days: 0
     }
   end
 

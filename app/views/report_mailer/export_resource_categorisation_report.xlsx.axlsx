@@ -23,12 +23,12 @@ end
 
 wb.add_worksheet(name: 'Project Wise Billable Employees') do |sheet|
   sheet.add_row(['Project Code', 'Project Name', 'Project Type', 'Billing Frequency', 'Employee Id', 'Employee Name', 'Employee Location',
-                  'Employee Designation', 'Billable', 'Non Billable', 'Investment', 'Shared', 'Bench' ]
+                  'Employee Designation', 'Billable', 'Non Billable', 'Investment', 'Start Date', "Number of Day's" ]
                 )
   project_wise_resource_report[:records].each do | resource |
     sheet.add_row [ resource[:code], resource[:project], resource[:type_of_project], resource[:billing_frequency],
                     resource[:emp_id], resource[:name], resource[:location], resource[:designation], resource[:billable],
-                    resource[:non_billable], resource[:investment], resource[:shared], resource[:bench] ],
+                    resource[:non_billable], resource[:investment], resource[:start_date], resource[:no_of_days] ],
                   types: [:string, :string, :string, :string, :string]
   end
 
@@ -36,6 +36,6 @@ wb.add_worksheet(name: 'Project Wise Billable Employees') do |sheet|
   header_names.each_with_index do |header, idx|
      sheet.add_row ['', '', '', '', '', '', "#{header}", '', project_wise_resource_report[:total_count][:billable][idx],
                     project_wise_resource_report[:total_count][:non_billable][idx], project_wise_resource_report[:total_count][:investment][idx],
-                    project_wise_resource_report[:total_count][:shared][idx], project_wise_resource_report[:total_count][:bench][idx]]
+                   ]
   end
 end

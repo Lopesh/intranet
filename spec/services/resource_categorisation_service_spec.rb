@@ -188,8 +188,8 @@ RSpec.describe ResourceCategorisationService do
               billable: @user_project_one.allocation,
               non_billable: 0,
               investment: 0,
-              shared: 0,
-              bench: 80
+              start_date:  @user_project_one.start_date.to_s,
+              no_of_days: (Date.today-@user_project_one.start_date).to_i
             },
             {
               code: @devops_project.code,
@@ -203,8 +203,8 @@ RSpec.describe ResourceCategorisationService do
               billable: 0,
               non_billable: @user_project_three.allocation,
               investment: 0,
-              shared: 0,
-              bench: 0
+              start_date:  @user_project_three.start_date.to_s,
+              no_of_days: (Date.today-@user_project_three.start_date).to_i
             },
             {
               code: @active_project_two.code,
@@ -218,8 +218,8 @@ RSpec.describe ResourceCategorisationService do
               billable: 0,
               non_billable: @user_project_two.allocation,
               investment: 0,
-              shared: 0,
-              bench: 60
+              start_date: @user_project_two.start_date.to_s,
+              no_of_days: (Date.today-@user_project_two.start_date).to_i
             },
             {
               code: @active_project_two.code,
@@ -233,8 +233,8 @@ RSpec.describe ResourceCategorisationService do
               billable: @user_project_four.allocation,
               non_billable: 0,
               investment: 0,
-              shared: 0,
-              bench: 0
+              start_date: @user_project_four.start_date.to_s,
+              no_of_days: (Date.today-@user_project_four.start_date).to_i
             }
           ]
         }
@@ -242,7 +242,7 @@ RSpec.describe ResourceCategorisationService do
 
       total_count = {
         :billable => [0, 2, 2], :non_billable => [1, 1, 2],
-        :investment => [0, 0, 4], :shared=>[0, 0, 4], :bench => [0, 2, 2]
+        :investment => [0, 0, 4], :shared=>[0, 0, 4], :bench => [0, 0, 4]
       }
 
       report = report[:project_wise_resource_report][:records].sort_by { |k,v| k[:project] }
