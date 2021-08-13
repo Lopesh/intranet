@@ -32,6 +32,8 @@ class LeaveApplication
   validate :validate_date, on: [:create, :update], unless: :optional_leave?
   validate :validate_optional_leave, on: [:create, :update], if: 'optional_leave? && !processed?'
   validate :update_leave_count, on: :update, if: :previous_leave_type?
+  validate :check_date_of_joining, on: [:create, :update], if: 'start_at.present?'
+  validate :check_past_optional_holiday, on: [:create, :update]
 
   after_save do
     deduct_available_leave_send_mail
@@ -49,6 +51,20 @@ class LeaveApplication
   scope :leaves, -> { where(:leave_type.nin => [LEAVE_TYPES[:wfh]]) }
 
   attr_accessor :sanctioning_manager
+
+  def check_date_of_joining
+    errors.add(
+      :start_at,
+      'Start date should be greater than Date of Joining'
+    ) if self.user.private_profile.date_of_joining > start_at
+  end
+
+  def check_past_optional_holiday
+    errors.add(
+      :base,
+      'You can not apply leave for past optional holiday.'
+    ) if leave_type.eql?('OPTIONAL HOLIDAY') && start_at < Date.today
+  end
 
   def processed?
     leave_status != PENDING
