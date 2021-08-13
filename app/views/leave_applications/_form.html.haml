@@ -28,7 +28,7 @@
     var end_of_year = "#{@end_of_year}"
     set_number_of_days(location)
 
-    if ($('#leave_application_leave_type').val() == 'OPTIONAL'){
+    if ($('#leave_application_leave_type').val() == 'OPTIONAL HOLIDAY'){
       $('#leave_list').html(input_leave_list)
       date = $('#leave_application_start_at').val()
       date ||= $('#leave_application_leave_list').val()
