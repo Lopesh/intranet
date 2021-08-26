@@ -3,12 +3,13 @@ namespace :user_details do
   desc "Export user personal, private details in csv"
   task :export_user_details => :environment do
     file = "#{Rails.root}/public/user_details.csv"
-    headers = ["Sr.No", "Employee ID", "Name", "Email", "Website sequence number", "Skype Id", "Pivotal Tracker Id", "Github Handle",
-                "Twitter Handle", "GitLab Handle", "Bitbucket Handle", "Blog Url", "LinkedIn Url", "Facebook Url",
-                "Slack Handle", "Tshirt Size", "Employee Location", "Designation Track", "Description", "Notification Email",
-                "Is billable", "Joining Bonus Paid", "Permanent Address", "Permanent Address city", "Permanent Address pin code",
-                "Permanent Address state", "Permanent Address mobile/landline no", "Temporary Address", "Temporary Address city",
-                "Temporary Address pine code", "Temporary Address state", "Temporary Address mobile/landline no"
+    headers = ["Sr.No", "Employee ID", "Name", "Email", "Website sequence number", "Skype Id", "Pivotal Tracker Id",
+               "Github Handle", "Twitter Handle", "GitLab Handle", "Bitbucket Handle", "Blog Url", "LinkedIn Url",
+               "Facebook Url", "Slack Handle", "Tshirt Size", "Employee Location", "Designation Track", "Description",
+               "Notification Email", "Is billable", "Joining Bonus Paid", "Permanent Address", "Permanent Address city",
+               "Permanent Address state", "Permanent Address mobile/landline no", "Permanent Address pin code",
+               "Temporary Address", "Temporary Address city", "Temporary Address state", "Temporary Address mobile/landline no",
+               "Temporary Address pin code"
               ]
     CSV.open(file, 'w', write_headers: true, headers: headers) do | writer |
       User.employees.approved.each_with_index do |u,i|
