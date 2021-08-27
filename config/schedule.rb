@@ -53,6 +53,10 @@ every :day, :at => '10:00am' do
   rake "notification:year_of_completion"
 end
 
+every :day, :at => '11:15am' do
+  rake "notification:test_birthday"
+end
+
 every :day, :at => '09:30am' do
   rake "leave_reminder:daily"
 end

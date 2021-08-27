@@ -73,7 +73,7 @@ class UserMailer < ActionMailer::Base
     mail(to: hr, subject: "Intranet: #{@downloader.name} has downloaded #{document_name}")
   end
 
-  def birthday_wish(user_id, birthday_templete)
+  def birthday_wish(user_id, birthday_templete, test_birthday)
     @birthday_user = User.find(user_id)
     @current_template = BIRTHDAY_TEMPLATES[:"#{birthday_templete}"]
     @image = @birthday_user.public_profile.image.medium
@@ -82,7 +82,18 @@ class UserMailer < ActionMailer::Base
     else
       attachments.inline['user.jpg'] = File.read("#{Rails.root}/app/assets/images/user_dummy_image.jpg")
     end
-    mail(to: 'all@joshsoftware.com', subject: "Happy Birthday #{@birthday_user.name}")
+
+    if test_birthday
+      mail = [
+        'swapnil@joshsoftware.com', 'rohit.nale@joshsoftware.com', 'sai@joshsoftware.com',
+        'neha.naghate@joshsoftware.com', 'amar.chavan@joshsoftware.com',
+        'sangeeta.yadav@joshsoftware.com', 'rupesh.gadekar@joshsoftware.com',
+        'shrikant.gadekar@joshsoftware.com', 'seema@joshsoftware.com'
+      ]
+      mail(to: mail, subject: "TEST EMAIL TOMORROW'S BIRTHDAY: Happy Birthday #{@birthday_user.name}")
+    else
+      mail(to: 'all@joshsoftware.com', subject: "Happy Birthday #{@birthday_user.name}")
+    end
   end
 
   def year_of_completion_wish(user_hash)

@@ -59,9 +59,23 @@ module UserDetail
         user_ids.each do |user_id|
           current_template_id = BirthdayTemplate.first.current_template_id
           current_template = "template_" + "#{current_template_id}"
-          UserMailer.birthday_wish(user_id, current_template).deliver
+          UserMailer.birthday_wish(user_id, current_template, false).deliver
           next_template_id = (current_template_id+1) % BIRTHDAY_TEMPLATES.count
           BirthdayTemplate.update(current_template_id: next_template_id)
+        end
+      end
+    end
+
+    def test_send_birthdays_wish
+      tomorrow = Date.tomorrow
+      user_ids = User.approved.where(dob_month: tomorrow.month, dob_day: tomorrow.day).map(&:id)
+
+      if user_ids.present?
+        current_template_id = BirthdayTemplate.first.current_template_id
+        user_ids.each do |user_id|
+          current_template = "template_" + "#{current_template_id}"
+          UserMailer.birthday_wish(user_id, current_template, true).deliver
+          current_template_id = (current_template_id+1) % BIRTHDAY_TEMPLATES.count
         end
       end
     end
