@@ -28,3 +28,31 @@ task :replace_user_images => :environment do
   puts "\n\nBelow Employee's profile images updated: \n"
   puts  image_upload_user
 end
+
+task :fetch_user_image => :environment do
+  download_user_image = []
+  user_name = []
+  count = 0
+  
+  images = Dir.glob("/home/deploy/projects/intranet/josh_image/*")
+  images.each do |image|
+    download_user_image << image.split('/').last
+  end
+  
+  User.approved.each do |user|
+    image_path = user.public_profile.image.medium
+    if image_path.present?
+      file_path = image_path.path.split('/')
+      next if download_user_image.include?(file_path.last)
+  
+      source_file = image_path.path
+      destination_folder = "/home/deploy/projects/intranet/josh_new_image/"
+  
+      system("cp", source_file, destination_folder)
+      user_name << user.name
+      count += 1
+    end
+  end
+  puts "Total Count: #{count}"
+  puts user_name
+end 
