@@ -308,7 +308,7 @@ class Project
   end
 
   def self.approved_manager_and_admin
-    User.where('$and': [status: STATUS[:approved], '$or': [{role: MANERIAL_ROLE[0]}, {role: MANERIAL_ROLE[1]}]])
+    User.where('$and': [status: STATUS[:approved], '$or': [{role: MANERIAL_ROLE[0]}, {role: MANERIAL_ROLE[1]}]]).sort_by(&:name)
   end
 
   def users
