@@ -12,6 +12,7 @@
         = f.input :description, as: :text, input_html: {class: "text-description"}
         = f.input :url
         = f.input :billing_frequency, collection: Project::BILLING_FREQUENCY_TYPES, include_blank: false, label: 'Billing Frequency'
+        = f.input :business_unit, collection: Project::BUSINESS_UNIT, include_blank: false, label: 'Business Unit'
         = f.input :type_of_project, collection: Project::TYPE_OF_PROJECTS, include_blank: false, label: 'Type Of Project'
         %div.control-group
           = f.label "Is Active"

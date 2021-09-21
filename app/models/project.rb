@@ -11,6 +11,7 @@ class Project
   BILLING_FREQUENCY_TYPES = ['Monthly', 'Bi-weekly', 'Adhoc', 'NA'].freeze
   TYPE_OF_PROJECTS = ['T&M', 'Fixbid', 'Free', 'Investment'].freeze
   TYPE_OF_BATCHES = ['Alpha', 'Bravo'].freeze
+  BUSINESS_UNIT = ["Engineering", "Digital"].freeze
 
   field :name
   field :batch_name, type: String
@@ -48,6 +49,7 @@ class Project
   field :display_name
   field :timesheet_mandatory, type: Boolean, default: true
   field :billing_frequency
+  field :business_unit, default: "Engineering"
   field :type_of_project
   field :is_activity, type: Boolean, default: false
   field :domains, type: Array, default: []
@@ -78,6 +80,7 @@ class Project
   validates :billing_frequency, inclusion: { in: BILLING_FREQUENCY_TYPES, allow_nil: true }
   validates :type_of_project, inclusion: { in: TYPE_OF_PROJECTS, allow_nil: true }
   validates :batch_name, inclusion: { in: TYPE_OF_BATCHES, allow_nil: true }
+  validates :business_unit, inclusion: { in: BUSINESS_UNIT, allow_nil: true }
   validate :start_date_less_than_end_date, if: 'end_date.present?'
   validate :validate_end_date, if: 'end_date.present?'
 
@@ -220,14 +223,16 @@ class Project
   def self.team_data_to_csv
     unwanted_project_names = ['Interview',  'Other']
     unwanted_projects = Project.where(:name.in => unwanted_project_names)
-    projects = Project.where(:id.nin => unwanted_projects.pluck(:id)).all_active.order_by(name: :asc)
+    projects = Project.where(:id.nin => unwanted_projects.pluck(:id), :business_unit => "Engineering").all_active.order_by(name: :asc)
 
     file = CSV.generate do |csv|
       csv << [
         'Project',
         'Project Start Date',
         'Project End Date',
+        'Employee ID',
         'Employee Name',
+        'Employee Email',
         'Employee Tech Skills',
         'Employee Other Skills',
         'Employee Total Exp in Months',
@@ -243,16 +248,19 @@ class Project
             project.name,
             project.start_date,
             end_date,
+            user.employee_id || "-",
             user.name,
+            user.email,
             [user.public_profile.try(:technical_skills)].flatten.compact.uniq.sort.reject(&:blank?).join(', ').delete("\n").gsub("\r", ' '),
             user.try(:public_profile).try(:skills).split(',').flatten.compact.uniq.sort.reject(&:blank?).join(', ').delete("\n").gsub("\r", ''),
             user.experience_as_of_today,
             up.start_date,
-            (Date.today - up.start_date).to_i
+            up.allocation == 0 ? 0 : (Date.today - up.start_date).to_i
           ] if up
         end
       end
     end
+
   end
 
   def self.manager_names(project)
