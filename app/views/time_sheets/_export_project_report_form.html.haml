@@ -15,6 +15,6 @@
         %br
         %br
         %label Project
-        = select_tag :project_id, options_for_select(Project.get_approved_project_between_range(@from_date, @to_date)), class: 'export-report-text-to-select', 'aria-label': 'Project'
+        = select_tag :project_id, options_for_select(Project.all_active.pluck(:name, :id)), class: 'export-report-text-to-select', 'aria-label': 'Project'
 
       = submit_tag "Download Report", class: "btn btn-primary btn-padding"

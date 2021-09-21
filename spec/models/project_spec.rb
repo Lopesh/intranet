@@ -558,15 +558,15 @@ describe Project do
   context '#team_data_to_csv' do
     let!(:user) { FactoryGirl.create(:user, status: STATUS[:approved]) }
     let!(:project) { FactoryGirl.create(:project) }
-
+    let!(:manager_names) { described_class.manager_names(project) || "" }
     it 'Should return valid csv' do
       end_date = project.end_date.blank? ? (Date.today + 6.months).end_of_month : project.end_date
       up = FactoryGirl.create(:user_project, user: user, project: project)
       csv = Project.team_data_to_csv
-      expected_csv = "Project,Project Start Date,Project End Date,Employee Name,Employee Tech Skills,Employee Other Skills,Employee Total Exp in Months,Employee Started On Project At,Days on Project\n"
+      expected_csv = "Project,Project Start Date,Project End Date,Employee ID,Employee Name,Employee Email,Employee Tech Skills,Employee Other Skills,Employee Total Exp in Months,Employee Started On Project At,Manager Name,Days on Project\n"
       skills = [user.public_profile.try(:technical_skills)].flatten.compact.uniq.sort.reject(&:blank?).join(', ').delete("\n").gsub("\r", ' ')
       other_skills = user.try(:public_profile).try(:skills).split(',').flatten.compact.uniq.sort.reject(&:blank?).join(', ').delete("\n").gsub("\r", '')
-      expected_csv << "#{project.name},#{project.start_date},#{end_date},#{user.name},\"#{skills}\",\"#{other_skills}\",#{user.experience_as_of_today},#{up.start_date},#{(Date.today - up.start_date).to_i}\n"
+      expected_csv << "#{project.name},#{project.start_date},#{end_date},#{user.employee_id},#{user.name},#{user.email},\"#{skills}\",\"#{other_skills}\",#{user.experience_as_of_today},#{up.start_date},\"#{manager_names}\",#{(Date.today - up.start_date).to_i}\n"
       expect(csv).to eq(expected_csv)
     end
   end
