@@ -185,7 +185,7 @@ class Project
   end
 
   def self.to_csv(options = {})
-    column_names = ['name', 'is_active', 'start_date', 'end_date', 'manager_name',
+    column_names = ['name', 'is_active', 'start_date', 'end_date', 'business_unit', 'manager_name',
       'number_of_employees', 'allocated_employees', 'employee_names', 'ruby_version',
       'rails_version', 'database', 'database_version', 'deployment_server',
       'deployment_script', 'web_server', 'app_server', 'payment_gateway', 'image_store',
