@@ -134,14 +134,14 @@ class User
   def self.leave_notification_emails(user_ids)
     emails = [
       'hr@joshsoftware.com',
-      'shailesh.kalekar@joshsoftware.com',
       'sameert@joshsoftware.com',
     ].flatten.compact.uniq
-
     users = User.where(:id.in => [user_ids].flatten)
     users.each do |user|
-      emails += user.get_managers_emails +
+      user_managers_email = user.get_managers_emails
+      emails += user_managers_email +
        user.employee_detail.try(:get_notification_emails)
+      emails << EXCEPT_LEAVES_NOTIFICATION_EMAIL if user_managers_email.empty?
     end
     emails.flatten.compact.uniq
   end

@@ -58,6 +58,7 @@ CUSTOM_MANAGERS = {
 }
 
 LEAVE_TYPES = {leave: 'LEAVE', wfh: 'WFH', optional_holiday: 'OPTIONAL HOLIDAY', spl: 'SPL', unpaid: 'UNPAID'}
+ADMIN_LEAVE_NOTIFICATION_EMAIL = "shailesh.karlekar@joshsoftware.com"
 
 ASSESSMENT_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 ASSESSMENT_PLATFORM = ['PLAI', 'Snowflake', 'None']

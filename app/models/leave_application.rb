@@ -278,7 +278,8 @@ class LeaveApplication
     leave_applications.each do |leave_application|
       user = leave_application.user
       managers = user.get_managers_emails
-      UserMailer.delay.leave_application(user.email, managers, leave_application.id, true)
+      managers << ADMIN_LEAVE_NOTIFICATION_EMAIL unless managers.include?(ADMIN_LEAVE_NOTIFICATION_EMAIL) && managers.count > 0
+      UserMailer.delay.leave_application(user.email, managers.uniq, leave_application.id, true)
     end
   end
 
