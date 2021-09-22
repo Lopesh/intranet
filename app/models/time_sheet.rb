@@ -788,7 +788,7 @@ class TimeSheet
     user_projects.each do |user_project|
       leaves_count =
         if user_project.end_date.present?
-          if from_date <= user_project.start_date
+          if from_date <= user_project.start_date && (from_date.blank? && to_date.blank?)
             approved_leaves_count(user, user_project.start_date, user_project.end_date)
           elsif from_date > user_project.start_date
             approved_leaves_count(user, from_date, user_project.end_date)
