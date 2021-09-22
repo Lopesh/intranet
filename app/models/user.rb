@@ -166,6 +166,10 @@ class User
     UserMailer.delay.leave_application(self.email, notified_users, leave_application_id)
   end
 
+  def reject_pending_and_wfh_leaves
+    self.leave_applications(:leave_type.in => ["PENDING", "WFH"]).delete_all
+  end
+
   def role?(role)
     self.role == role
   end

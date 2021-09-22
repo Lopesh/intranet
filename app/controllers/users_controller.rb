@@ -38,6 +38,7 @@ class UsersController < ApplicationController
     if return_value_of_add_project && return_value_of_remove_project
       tab = params[:user][:attachments_attributes].present? ? 'Documents': 'Employee details'
       if @user.save
+        @user.reject_pending_and_wfh_leaves if @user.status == 'resigned'
         flash.notice = "#{tab} updated Successfully"
         redirect_to public_profile_user_path(@user)
       else
