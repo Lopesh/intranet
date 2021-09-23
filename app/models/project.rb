@@ -65,6 +65,7 @@ class Project
   validates_presence_of :name
   validate :project_code
   scope :all_active, ->{where(is_active: true).asc(:name)}
+  scope :with_active_and_billing_status, -> { where(:is_active => true, :billing_frequency.nin => ['NA']).asc(:name)}
   scope :visible_on_website, -> {where(visible_on_website: true)}
   scope :sort_by_position, -> { asc(:position)}
 
