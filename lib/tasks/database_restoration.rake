@@ -19,7 +19,7 @@ namespace :database_restoration do
                                       manager_feedback: "This is a good employee",
                                       team_feedback: "We got such a good colleague",
                                       assessment_wise_designation: "Software Engineer"
-        	                       })
+                                 })
 
         collection = db[:manager_feedbacks]
         collection.find.update_all(:$set => { feedback: "This employee is very Active and Keep always positive attitude towards work." })
@@ -31,9 +31,9 @@ namespace :database_restoration do
         system("mongorestore --db intranet_development #{parent_directory}/intranet_db_dump")
         change_users_password_on_development_env
         change_sensitive_snowflake_info_development_env  
-	    else
-	  	  raise "Error: #{dirname} Directory not available in #{path}"
+      else
+        raise "Error: #{dirname} Directory not available in #{path}"
       end
-    end	
+    end  
   end
 end
