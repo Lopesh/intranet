@@ -34,6 +34,6 @@ namespace :database_restoration do
       else
         raise "Error: #{dirname} Directory not available in #{path}"
       end
-    end  
+    end
   end
 end
